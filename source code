@@ -1,0 +1,74 @@
+class Auction:
+    def __init__(self, item_name, base_price):
+        self.item_name = item_name
+        self.base_price = base_price
+        self.highest_bid = 0
+        self.highest_bidder = None
+        self.is_open = True
+
+    def place_bid(self, bidder_name, bid_amount):
+        if not self.is_open:
+            print("Auction is closed.")
+            return
+        if bid_amount > self.highest_bid and bid_amount >= self.base_price:
+            self.highest_bid = bid_amount
+            self.highest_bidder = bidder_name
+            print(f"Bid placed successfully! Current highest bid is {self.highest_bid} by {self.highest_bidder}.")
+        else:
+            print(f"Bid not high enough. Current highest bid is {self.highest_bid}.")
+
+    def close_auction(self):
+        self.is_open = False
+        if self.highest_bidder:
+            print(f"Auction closed! The item '{self.item_name}' was sold to {self.highest_bidder} for {self.highest_bid}.")
+        else:
+            print(f"Auction closed! No bids were placed on the item '{self.item_name}'.")
+
+def main():
+    auctions = []
+    while True:
+        print("\n--- Online Auction System ---")
+        print("1. Create an Auction")
+        print("2. Place a Bid")
+        print("3. Close an Auction")
+        print("4. View Auctions")
+        print("5. Exit")
+        
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            item_name = input("Enter the item name: ")
+            base_price = float(input("Enter the base price: "))
+            auctions.append(Auction(item_name, base_price))
+            print(f"Auction created for '{item_name}' with base price {base_price}.")
+
+        elif choice == '2':
+            auction_id = int(input("Enter auction ID to place a bid on: ")) - 1
+            if 0 <= auction_id < len(auctions):
+                bidder_name = input("Enter your name: ")
+                bid_amount = float(input("Enter your bid amount: "))
+                auctions[auction_id].place_bid(bidder_name, bid_amount)
+            else:
+                print("Invalid Auction ID.")
+
+        elif choice == '3':
+            auction_id = int(input("Enter auction ID to close: ")) - 1
+            if 0 <= auction_id < len(auctions):
+                auctions[auction_id].close_auction()
+            else:
+                print("Invalid Auction ID.")
+
+        elif choice == '4':
+            for i, auction in enumerate(auctions):
+                status = "Open" if auction.is_open else "Closed"
+                print(f"Auction {i + 1}: {auction.item_name}, Base Price: {auction.base_price}, Highest Bid: {auction.highest_bid} by {auction.highest_bidder}, Status: {status}")
+
+        elif choice == '5':
+            print("Exiting the system.")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
